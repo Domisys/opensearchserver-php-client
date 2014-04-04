@@ -1,7 +1,6 @@
 {
    "name" : "opensearchserver/opensearchserver",
    "description" : "PHP library for OpenSearchServer.",
-   "version" : "2.0",
    "type" : "library",
    "keywords" : ["oss","search engine","opensearchserver","search"],
    "homepage" : "http://www.open-search-server.com/",
