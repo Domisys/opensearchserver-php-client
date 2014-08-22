@@ -163,7 +163,7 @@ class OssSearch extends OssSearchAbstract
     public function sort($fields)
     {
         foreach ((array) $fields as $field)
-            $this->sort[] = $field;
+            $this->sort = $field;
 
         return $this;
     }
