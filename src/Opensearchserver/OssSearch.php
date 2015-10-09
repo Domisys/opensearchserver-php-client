@@ -47,8 +47,9 @@ class OssSearch extends OssSearchAbstract
     protected $join;
     protected $joinFilter;
     protected $joinNegativeFilter;
-    protected $filterOperator;
-    protected $filterOperators = array('or' => 'OR', 'and' => 'AND');
+
+    private $filterOperator;
+    private $allowedFilterOperators = array('or' => 'OR', 'and' => 'AND');
 
     /**
      * @param $enginePath The URL to access the OSS Engine
@@ -75,7 +76,7 @@ class OssSearch extends OssSearchAbstract
         $this->lang = null;
         $this->operator = null;
         $this->collapse = array('field' => null, 'max' => null, 'mode' => null, 'type' => null);
-        $this->filterOperator = $this->filterOperators['or'];
+        $this->filterOperator = $this->allowedFilterOperators['or'];
     }
 
     /**
@@ -411,7 +412,7 @@ class OssSearch extends OssSearchAbstract
     
     public function setFilterOperator($filterOperator)
     {
-        if(! in_array($filterOperator, $this->filterOperators))
+        if(! in_array($filterOperator, $this->allowedFilterOperators ))
         {
             return;
         }
