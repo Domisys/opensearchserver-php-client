@@ -48,6 +48,9 @@ class OssSearch extends OssSearchAbstract
     protected $joinFilter;
     protected $joinNegativeFilter;
 
+    private $filterOperator;
+    private $allowedFilterOperators = array('or' => 'OR', 'and' => 'AND');
+
     /**
      * @param $enginePath The URL to access the OSS Engine
      * @param $index The index name
@@ -73,6 +76,7 @@ class OssSearch extends OssSearchAbstract
         $this->lang = null;
         $this->operator = null;
         $this->collapse = array('field' => null, 'max' => null, 'mode' => null, 'type' => null);
+        $this->filterOperator = $this->allowedFilterOperators['or'];
     }
 
     /**
@@ -308,11 +312,13 @@ class OssSearch extends OssSearchAbstract
         }
 
         // Filters
-        foreach ((array) $this->filter as $filter) {
+        $filters = $this->getfilters();
+        foreach ($filters as $filterName => $filter) {
             if (empty($filter)) {
                 continue;
             }
-            $queryChunks[] = 'fq=' . urlencode($filter);
+            $filterUrl = $filterName . ':(' . implode($this->filterOperator, $filter) . ')';
+            $queryChunks[] = 'fq=' . urlencode($filterUrl);
         }
 
         // Negative Filters
@@ -385,5 +391,31 @@ class OssSearch extends OssSearchAbstract
         }
 
         return $queryChunks;
+    }
+    
+    private function getFilters()
+    {
+        $filters = array();
+    
+        foreach ((array) $this->filter as $filter) {
+            if (empty($filter)) {
+                continue;
+            }
+    
+            list($filterName, $filterValue) = explode(':', $filter);
+    
+            $filters[$filterName][] = $filterValue;
+        }
+    
+        return $filters;
+    }
+    
+    public function setFilterOperator($filterOperator)
+    {
+        if (! in_array($filterOperator, $this->allowedFilterOperators )) {
+            return;
+        }
+    
+        $this->filterOperator = $filterOperator;
     }
 }
