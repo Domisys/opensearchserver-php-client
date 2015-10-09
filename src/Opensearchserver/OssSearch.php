@@ -412,8 +412,7 @@ class OssSearch extends OssSearchAbstract
     
     public function setFilterOperator($filterOperator)
     {
-        if(! in_array($filterOperator, $this->allowedFilterOperators ))
-        {
+        if (! in_array($filterOperator, $this->allowedFilterOperators )) {
             return;
         }
     
